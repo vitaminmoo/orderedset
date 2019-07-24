@@ -15,7 +15,11 @@ func Test_removeIndex(t *testing.T) {
 		args args
 		want []string
 	}{
-		// TODO: Add test cases.
+		{
+			"basic",
+			args{[]string{"a", "b", "c"}, 1},
+			[]string{"a", "c"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

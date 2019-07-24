@@ -48,7 +48,7 @@ func (os *OrderedSet) Replace(item string, replacement string) {
 			if replaced {
 				toDelete = append(toDelete, n)
 			} else {
-				i = replacement
+				os.set[n] = replacement
 				replaced = true
 			}
 		}
@@ -56,15 +56,14 @@ func (os *OrderedSet) Replace(item string, replacement string) {
 	for _, i := range toDelete {
 		os.set = removeIndex(os.set, i)
 	}
-	os.set = append([]string{item}, os.set...)
 }
 
 /*
 Intersect intersects the two OrderedSets, returning a new OrderedSet
 > The intersection of ordered sets A and B, is the result of creating a new ordered set set and, for each item of A, if B contains item, appending item to set.
 */
-func (os *OrderedSet) Intersect(other *OrderedSet) OrderedSet {
-	newos := OrderedSet{}
+func (os *OrderedSet) Intersect(other *OrderedSet) *OrderedSet {
+	newos := &OrderedSet{}
 	for _, i := range os.set {
 		for _, a := range other.set {
 			if a == i {
@@ -79,25 +78,32 @@ func (os *OrderedSet) Intersect(other *OrderedSet) OrderedSet {
 Union returns a union of both OrderedSets, as a new OrderedSet
 > The union of ordered sets A and B, is the result of cloning A as set and, for each item of B, appending item to set."
 */
-func (os *OrderedSet) Union(other *OrderedSet) OrderedSet {
+func (os *OrderedSet) Union(other *OrderedSet) *OrderedSet {
 	newos := *os
+	newos.set = make([]string, len(os.set))
+	copy(newos.set, os.set)
+	if other == nil {
+		return &newos
+	}
 	for _, i := range other.set {
 		newos.Append(i)
 	}
-	return newos
+	return &newos
 }
 
 /*
 Range returns a chunk of an OrderedSet
 > The range n to m, inclusive, creates a new ordered set containing all of the integers from n up to and including m in consecutively increasing order, as long as m is greater than or equal to n.
 */
-func (os *OrderedSet) Range(start int, end int) OrderedSet {
-	ns := OrderedSet{}
-	ns.set = os.set[start:end]
+func (os *OrderedSet) Range(start int, end int) *OrderedSet {
+	ns := &OrderedSet{}
+	ns.set = os.set[start : end+1]
 	return ns
 }
 
 // AsSlice returns a copy of the Ordered Set as a slice for iteration
 func (os *OrderedSet) AsSlice() []string {
-	return os.set
+	sl := make([]string, len(os.set))
+	copy(sl, os.set)
+	return sl
 }
