@@ -64,7 +64,15 @@ Intersect intersects the two OrderedSets, returning a new OrderedSet
 > The intersection of ordered sets A and B, is the result of creating a new ordered set set and, for each item of A, if B contains item, appending item to set.
 */
 func (os *OrderedSet) Intersect(other *OrderedSet) OrderedSet {
-	return OrderedSet{}
+	newos := OrderedSet{}
+	for _, i := range os.set {
+		for _, a := range other.set {
+			if a == i {
+				newos.Append(i)
+			}
+		}
+	}
+	return newos
 }
 
 /*
@@ -72,7 +80,11 @@ Union returns a union of both OrderedSets, as a new OrderedSet
 > The union of ordered sets A and B, is the result of cloning A as set and, for each item of B, appending item to set."
 */
 func (os *OrderedSet) Union(other *OrderedSet) OrderedSet {
-	return OrderedSet{}
+	newos := *os
+	for _, i := range other.set {
+		newos.Append(i)
+	}
+	return newos
 }
 
 /*
